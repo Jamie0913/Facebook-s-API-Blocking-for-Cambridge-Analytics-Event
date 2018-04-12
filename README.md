@@ -31,6 +31,7 @@ Edge 和 field 是 Facebook Graph API 的特殊用語。Facebook Graph API 這�
 Graph API 的威力
 舉例來說，如果我們想知道 “創投阿麗莎” 這個粉專 (它是一個 node) 的粉專簡介 (它是這個 node 的某個 field)，我們可以透過 Graph API 送出一個 HTTP get 的請求:
 "https://graph.facebook.com/v2.12/vcalyssa?fields=about&access_token=EAEos.......e7BldHOIHeQXhn4JQxq"
+
 我們甚至可以直接在瀏覽器的網址列上輸入上述網址，就會收到來自 Graph API server 的回應。這是一個包成 JSON 格式的回應:
 {
   "about": "不用明星臉，不用開分身，行不改名坐不改姓，創投阿麗莎就是我",
@@ -49,8 +50,10 @@ Graph API 的威力
 幾年前在舊版的 API 中，還有些 API 可以不需要 token 就能存取如頭像等公開的資料，但現在幾乎所有的 API，不管存取的是不是公開資料，都需要一個有效的 token。
 Token 有幾種不同的類型，但最常見的 token 就是代表使用者身分的 “用戶存取權杖” (User Access Token)，它必須經由使用者授權產生。我們在 Facebook 上玩那些心理測驗的小程式時，會跳出應用程式要求授權的視窗來，當你同意並授權那些應用程式之後，它們就會拿到你的 Facebook ID 所授權的 token，只要在你授權的範圍內，使用這個 token 就可以以你的 Facebook 身分來呼叫 Graph API。
 Facebook 身分在 Graph API 的使用上，是非常重要的一個因素，因為它決定了你可以看得到什麼、不能看到什麼；也決定了你可以做什麼、不能做什麼。舉例來說，如果你跟某人是朋友，當你用你的 token 呼叫 GET /user/albums 這個 edge 的查詢時，你就會看到 Graph API 回傳他在 Facebook 上有哪些相簿、相簿的名稱、以及每一個相簿的 node ID 等資料。當你有了每個相簿的 node ID，你就可以繼續用 photos 這個 edge 去查詢每個相簿裡有哪些照片，然後再用 picture 這個 field 拿到每一張照片的 URL，看到圖檔。以上這些動作，都可以透過 Graph API 輕輕鬆鬆用幾行程式碼自動完成，換句話說，透過 Graph API，你可以輕輕鬆鬆把某人貼在 Facebook 上的照片全部抓一份下來。前提是他跟你必須是 Facebook 上的好友，而且他有對好友開放他的相簿。如果你跟對方不是好友，而你企圖用 Graph API 去存取他未公開的相簿，你什麼資料都拿不到。
+
 看出來了嗎？Graph API 雖然強大，但是它不會讓你存取超過你的 Facebook ID 權限所能看到的資料。
 Graph API 強大的地方不在於它能看到什麼，而在於它能讓你用程式化、自動化的方法完成許多工作。
+
 以社團 (group) 的 API 來說，你可以對社團的 node 查詢 /members 這個 edge，就能一次列出參加這個社團的所有成員。Facebook 上有許多動輒數萬人甚至數十萬人的大型社團，用這個方法，你可以輕輕鬆鬆一次拿到數萬人的 Facebook user node 資料。雖然你跟這些人不見得是好友，但光是透過 user node 查詢他們公開的資料，如關於 (about)、政治傾向 (political)、宗教 (religion)、婚姻狀態 (relationship_status)、家鄉 (hometiwn) 這些欄位，就能大概拼湊出這個使用者的族群或某些分類的輪廓。這可以拿來幹嘛？光是拿來投放廣告，對某些族群來說就有不得了的精準度了。
 更有甚者，如果你的 app 要求使用者授權存取你的 profile，而他同意了，那麼不光是公開的資料，連他只對朋友開放的欄位都拿得到，你就可以更精確地了解這個使用者。這事情聽起來有點耳熟？前陣子鬧得滿城風雨的 Cambridge Analytica 醜聞，就是這麼運作的。
  
